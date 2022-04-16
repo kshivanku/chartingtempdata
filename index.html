@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title></title>
+    <title>CSV data</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="">
@@ -12,8 +12,21 @@
 
 <body>
     here
-
-    <script src="" async defer></script>
+    <script>
+        console.log('here')
+        getData();
+        async function getData() {
+            const response = await fetch('ZonAnn.Ts+dSST.csv')
+            const data = await response.text();
+            const table = data.split(/\n/).slice(1);
+            table.forEach(row => {
+                columns = row.split(',')
+                const year = columns[0];
+                const temp = columns[1];
+                console.log(year, temp)
+            })
+        }
+    </script>
 </body>
 
 </html>
