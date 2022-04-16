@@ -8,23 +8,44 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
 </head>
 
 <body>
-    here
+    <canvas id="myChart" width="800" height="400"></canvas>>
     <script>
         console.log('here')
-        getData();
+        drawChart();
+
+        async function drawChart() {
+            const {xs, ys} = await getData();
+            const ctx = document.getElementById('myChart').getContext('2d');
+            const myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: xs,
+                    datasets: [{
+                        label: 'Avg global temp',
+                        data: ys,
+                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                        borderColor: 'rgba(255, 99, 132, 0.2)',
+                        borderWidth: 1
+                    }]
+                }});
+        }
+
         async function getData() {
+            const xs = [];
+            const ys = [];
             const response = await fetch('ZonAnn.Ts+dSST.csv')
             const data = await response.text();
             const table = data.split(/\n/).slice(1);
             table.forEach(row => {
                 columns = row.split(',')
-                const year = columns[0];
-                const temp = columns[1];
-                console.log(year, temp)
+                xs.push(columns[0]);
+                ys.push(parseFloat(columns[1]) + 14);
             })
+            return {xs, ys}
         }
     </script>
 </body>
